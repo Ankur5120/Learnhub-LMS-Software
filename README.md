@@ -4,7 +4,7 @@ The platform is built using the **MERN stack**, which includes ReactJS, NodeJS, 
 
 <hr/>
 
-<h2>Live link 🌍📡 - [ https://learnhub-opju.netlify.app/ ]</h2>
+<h2>Live link 🌍📡 - [https://learnhub-by-harsh.vercel.app/]</h2>
 <hr/>
 
 
