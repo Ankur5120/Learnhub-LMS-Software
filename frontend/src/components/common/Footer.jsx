@@ -178,7 +178,7 @@ const Footer = () => {
 
               <Link to='https://github.com/Aniruddha-Gade' target="__blank" className="text-white hover:underline mr-1"
               >
-                Aniruddha Gade
+                Harsh Agrawal
               </Link>
             </div>
             <span> © 2025 Learnhub</span>
