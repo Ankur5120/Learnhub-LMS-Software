@@ -174,14 +174,14 @@ const Footer = () => {
 
           <div className="text-center flex flex-col sm:flex-row ">
             <div className="flex ">
-              <span> Made with ❤️</span>
+              <span> Developed By:</span>
 
               <Link to='https://github.com/Aniruddha-Gade' target="__blank" className="text-white hover:underline mr-1"
               >
                 Aniruddha Gade
               </Link>
             </div>
-            <span> © 2023 Studynotion</span>
+            <span> © 2025 Learnhub</span>
           </div>
 
           <div className="flex items-center">
