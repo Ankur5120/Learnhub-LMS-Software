@@ -36,13 +36,13 @@ exports.sendOTP = async (req, res) => {
             lowerCaseAlphabets: false,
             specialChars: false
         })
-        // console.log('Your otp - ', otp);
+        console.log('Your otp - ', otp);
 
         const name = email.split('@')[0].split('.').map(part => part.replace(/\d+/g, '')).join(' ');
         console.log(name);
 
         // send otp in mail
-        await mailSender(email, 'OTP Verification Email', otpTemplate(otp, name));
+        // await mailSender(email, 'OTP Verification Email', otpTemplate(otp, name));
 
         // create an entry for otp in DB
         const otpBody = await OTP.create({ email, otp });
@@ -72,7 +72,8 @@ exports.sendOTP = async (req, res) => {
 // ================ SIGNUP ================
 exports.signup = async (req, res) => {
     try {
-        // extract data 
+        console.log('Received data:', req.body);
+        // extract data
         const { firstName, lastName, email, password, confirmPassword,
             accountType, contactNumber, otp } = req.body;
 

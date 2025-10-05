@@ -307,7 +307,7 @@ function CourseDetails() {
               <p className="text-[28px] font-semibold">Author</p>
               <div className="flex items-center gap-4 py-4">
                 <Img
-                  src={instructor.image}
+                  src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-xnGLZJFli6FRyXSlm8-QnpJb9hh30HffEA&s "}
                   alt="Author"
                   className="h-14 w-14 rounded-full object-cover"
                 />

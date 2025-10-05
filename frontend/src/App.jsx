@@ -40,6 +40,7 @@ import { ACCOUNT_TYPE } from './utils/constants';
 import { HiArrowNarrowUp } from "react-icons/hi"
 
 
+
 function App() {
 
   const { user } = useSelector((state) => state.profile)

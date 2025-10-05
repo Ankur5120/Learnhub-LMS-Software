@@ -49,10 +49,6 @@ const randomImges = [
     backgroundImg111,
 ];
 
-// hardcoded
-
-
-
 const Home = () => {
 
     // get background random images
@@ -63,56 +59,58 @@ const Home = () => {
         setBackgroundImg(bg);
     }, [])
 
-    // console.log('bg ==== ', backgroundImg)
-
     // get courses data
     const [CatalogPageData, setCatalogPageData] = useState(null);
-    const categoryID = "6506c9dff191d7ffdb4a3fe2" // hard coded
+    const categoryID = "68e1b067d2bf765ec835a561" // seeded category ID
     const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchCatalogPageData = async () => {
-
-            const result = await getCatalogPageData(categoryID, dispatch);
-            setCatalogPageData(result);
-            // console.log("page data ==== ",CatalogPageData);
-        }
+            try {
+                const result = await getCatalogPageData(categoryID, dispatch);
+                if (!result || Object.keys(result).length === 0) {
+                    console.error("CatalogPageData is empty or null");
+                    setCatalogPageData(null);
+                    return;
+                }
+                setCatalogPageData(result);
+                console.log("CatalogPageData fetched: ", result);
+                console.log("Selected category courses: ", result?.selectedCategory?.courses);
+                console.log("Most selling courses: ", result?.mostSellingCourses);
+                // Log rating data for debugging
+                result?.mostSellingCourses?.forEach(course => {
+                    console.log(`Course: ${course.courseName}, Ratings: ${course.ratingAndReviews?.length || 0}`);
+                });
+            } catch (error) {
+                console.error("Error fetching catalog page data:", error);
+                setCatalogPageData(null);
+            }
+        };
         if (categoryID) {
             fetchCatalogPageData();
         }
     }, [categoryID])
-
-
-    // console.log('================ CatalogPageData?.selectedCourses ================ ', CatalogPageData)
-
 
     return (
         <React.Fragment>
             {/* background random image */}
             <div>
                 <div className="w-full h-[450px] md:h-[650px] absolute top-0 left-0 opacity-[0.3] overflow-hidden object-cover ">
-                    <img src={backgroundImg} alt="Background"
-                        className="w-full h-full object-cover "
-                    />
-
+                    <img src={backgroundImg} alt="Background" className="w-full h-full object-cover " />
                     <div className="absolute left-0 bottom-0 w-full h-[250px] opacity_layer_bg "></div>
                 </div>
             </div>
 
-            <div className=' '>
+            <div className=''>
                 {/*Section1  */}
                 <div className='relative h-[450px] md:h-[550px] justify-center mx-auto flex flex-col w-11/12 max-w-maxContent items-center text-white '>
-
                     <Link to={"/signup"}>
-                        <div className='z-0 group p-1 mx-auto rounded-full bg-richblack-800 font-bold text-richblack-200
-                                        transition-all duration-200 hover:scale-95 w-fit'>
-                            <div className='flex flex-row items-center gap-2 rounded-full px-10 py-[5px]
-                              transition-all duration-200 group-hover:bg-richblack-900'>
+                        <div className='z-0 group p-1 mx-auto rounded-full bg-richblack-800 font-bold text-richblack-200 transition-all duration-200 hover:scale-95 w-fit'>
+                            <div className='flex flex-row items-center gap-2 rounded-full px-10 py-[5px] transition-all duration-200 group-hover:bg-richblack-900'>
                                 <p>Become an Instructor</p>
                                 <FaArrowRight />
                             </div>
                         </div>
-
                     </Link>
 
                     <motion.div
@@ -135,7 +133,6 @@ const Home = () => {
                     >
                         With our online coding courses, you can learn at your own pace, from anywhere in the world, and get access to a wealth of resources, including hands-on projects, quizzes, and personalized feedback from instructors.
                     </motion.div>
-
 
                     <div className='flex flex-row gap-7 mt-8'>
                         <CTAButton active={true} linkto={"/signup"}>
@@ -164,27 +161,21 @@ const Home = () => {
                             subheading={
                                 "Our courses are designed and taught by industry experts who have years of experience in coding and are passionate about sharing their knowledge with you."
                             }
-                            ctabtn1={
-                                {
-                                    btnText: "try it yourself",
-                                    linkto: "/signup",
-                                    active: true,
-                                }
-                            }
-                            ctabtn2={
-                                {
-                                    btnText: "learn more",
-                                    linkto: "/login",
-                                    active: false,
-                                }
-                            }
-
-                            codeblock={`<<!DOCTYPE html>\n<html>\n<head><title>Example</title>\n</head>\n<body>\n<h1><ahref="/">Header</a>\n</h1>\n<nav><ahref="one/">One</a><ahref="two/">Two</a><ahref="three/">Three</a>\n</nav>`}
+                            ctabtn1={{
+                                btnText: "try it yourself",
+                                linkto: "/signup",
+                                active: true,
+                            }}
+                            ctabtn2={{
+                                btnText: "learn more",
+                                linkto: "/login",
+                                active: false,
+                            }}
+                            codeblock={`<<!DOCTYPE html>\n<html>\n<head><title>Example</title>\n</head>\n<body>\n<h1><a href="/">Header</a>\n</h1>\n<nav><a href="one/">One</a><a href="two/">Two</a><a href="three/">Three</a>\n</nav>`}
                             codeColor={"text-yellow-25"}
-                            backgroundGradient={"code-block1-grad"}
+                            backgroundGradient={"code-block11-grad"}
                         />
                     </div>
-
 
                     {/* Code block 2 */}
                     <div>
@@ -201,17 +192,17 @@ const Home = () => {
                             }
                             ctabtn1={{
                                 btnText: "Continue Lesson",
-                                link: "/signup",
+                                linkto: "/signup",
                                 active: true,
                             }}
                             ctabtn2={{
                                 btnText: "Learn More",
-                                link: "/signup",
+                                linkto: "/signup",
                                 active: false,
                             }}
                             codeColor={"text-white"}
                             codeblock={`import React from "react";\n import CTAButton from "./Button";\nimport TypeAnimation from "react-type";\nimport { FaArrowRight } from "react-icons/fa";\n\nconst Home = () => {\nreturn (\n<div>Home</div>\n)\n}\nexport default Home;`}
-                            backgroundGradient={"code-block2-grad"}
+                            backgroundGradient={"code-block22-grad"}
                         />
                     </div>
 
@@ -223,17 +214,21 @@ const Home = () => {
                         <Course_Slider Courses={CatalogPageData?.selectedCategory?.courses} />
                     </div>
                     <div className=' mx-auto box-content w-full max-w-maxContentTab px- py-12 lg:max-w-maxContent'>
-                        <h2 className='text-white mb-6 text-2xl '>
-                            Top Enrollments Today 🔥
-                        </h2>
+                        <div className='mb-6'>
+                            <h2 className='text-white mb-2 text-2xl font-bold'>
+                                Top Enrollments Today 🔥
+                            </h2>
+                            <p className='text-richblack-300 text-sm'>
+                                Highly rated courses with excellent student feedback
+                            </p>
+                        </div>
                         <Course_Slider Courses={CatalogPageData?.mostSellingCourses} />
                     </div>
-
 
                     <ExploreMore />
                 </div>
 
-                {/*Section 2  */}
+                {/*Section 2 */}
                 <div className='bg-pure-greys-5 text-richblack-700 '>
                     <div className='homepage_bg h-[310px]'>
                         <div className='w-11/12 max-w-maxContent flex flex-col items-center justify-between gap-5 mx-auto'>
@@ -273,7 +268,6 @@ const Home = () => {
                             </div>
                         </div>
 
-
                         {/* leadership */}
                         <TimelineSection />
 
@@ -283,12 +277,11 @@ const Home = () => {
 
                 </div>
 
-
                 {/*Section 3 */}
                 <div className='mt-14 w-11/12 mx-auto max-w-maxContent flex-col items-center justify-between gap-8 first-letter bg-richblack-900 text-white'>
                     <InstructorSection />
 
-                    {/* Reviws from Other Learner */}
+                    {/* Reviews from Other Learner */}
                     <h1 className="text-center text-3xl lg:text-4xl font-semibold mt-8 flex justify-center items-center gap-x-3">
                         Reviews from other learners <MdOutlineRateReview className='text-yellow-25' />
                     </h1>

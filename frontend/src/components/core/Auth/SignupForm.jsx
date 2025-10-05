@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { toast } from "react-hot-toast"
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 
 import { sendOtp } from "../../../services/operations/authAPI"
@@ -14,9 +14,11 @@ import Tab from "../../common/Tab"
 function SignupForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.auth);
 
   // student or instructor
-  const [accountType, setAccountType] = useState(ACCOUNT_TYPE.STUDENT);
+  // Fix accountType to match backend enum values: 'Student' or 'Instructor' with capital first letter
+  const [accountType, setAccountType] = useState("Student");
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -49,6 +51,14 @@ function SignupForm() {
       toast.error("Passwords Do Not Match")
       return;
     }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
     const signupData = {
       ...formData,
       accountType,
@@ -139,7 +149,7 @@ function SignupForm() {
           </p>
           <input
             required
-            type="text"
+            type="email"
             name="email"
             value={email}
             onChange={handleOnChange}
@@ -215,9 +225,10 @@ function SignupForm() {
 
         <button
           type="submit"
+          disabled={loading}
           className="mt-6 rounded-[8px] bg-yellow-50 py-[8px] px-[12px] font-medium text-richblack-900"
         >
-          Create Account
+          {loading ? "Creating Account..." : "Create Account"}
         </button>
       </form>
     </div>

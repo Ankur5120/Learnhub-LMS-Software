@@ -68,6 +68,7 @@ exports.showAllCategories = async (req, res) => {
 // ================ Get Category Page Details ================
 exports.getCategoryPageDetails = async (req, res) => {
     try {
+        console.log('getCategoryPageDetails called', req.body);
         const { categoryId } = req.body
         // console.log("PRINTING CATEGORY ID: ", categoryId);
 
@@ -76,7 +77,10 @@ exports.getCategoryPageDetails = async (req, res) => {
             .populate({
                 path: "courses",
                 match: { status: "Published" },
-                populate: "ratingAndReviews",
+                populate: [
+                    { path: "instructor" },
+                    { path: "ratingAndReviews" }
+                ]
             })
             .exec()
 
@@ -120,18 +124,49 @@ exports.getCategoryPageDetails = async (req, res) => {
             .populate({
                 path: "courses",
                 match: { status: "Published" },
-                populate: {
-                    path: "instructor",
-                },
+                populate: [
+                    { path: "instructor" },
+                    { 
+                        path: "ratingAndReviews",
+                        populate: {
+                            path: "user",
+                            select: "firstName lastName"
+                        }
+                    }
+                ],
             })
             .exec()
 
         const allCourses = allCategories.flatMap((category) => category.courses)
         const mostSellingCourses = allCourses
-            .sort((a, b) => b.sold - a.sold)
+            .sort((a, b) => {
+                // Sort by sold count (enrollment) first, then by rating average
+                const aSold = a.sold || 0;
+                const bSold = b.sold || 0;
+                if (bSold !== aSold) return bSold - aSold;
+                
+                // If sold count is same, sort by average rating
+                const aRating = a.ratingAndReviews?.length > 0 ? 
+                    a.ratingAndReviews.reduce((sum, review) => sum + review.rating, 0) / a.ratingAndReviews.length : 0;
+                const bRating = b.ratingAndReviews?.length > 0 ? 
+                    b.ratingAndReviews.reduce((sum, review) => sum + review.rating, 0) / b.ratingAndReviews.length : 0;
+                return bRating - aRating;
+            })
             .slice(0, 10)
 
-        // console.log("mostSellingCourses COURSE", mostSellingCourses)
+        // Debug log to check ratingAndReviews population
+        mostSellingCourses.forEach(course => {
+            const avgRating = course.ratingAndReviews?.length > 0 ? 
+                course.ratingAndReviews.reduce((sum, review) => sum + review.rating, 0) / course.ratingAndReviews.length : 0;
+            console.log(`Course: ${course.courseName}, Sold: ${course.sold || 0}, Ratings count: ${course.ratingAndReviews?.length || 0}, Avg Rating: ${avgRating.toFixed(1)}`);
+        });
+
+        console.log("getCategoryPageDetails response data:", {
+            selectedCategory: selectedCategory ? selectedCategory.courses.length : 0,
+            differentCategory: differentCategory ? differentCategory.courses.length : 0,
+            mostSellingCourses: mostSellingCourses ? mostSellingCourses.length : 0,
+        });
+
         res.status(200).json({
             success: true,
             data: {
