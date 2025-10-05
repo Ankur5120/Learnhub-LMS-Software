@@ -4,8 +4,8 @@ The platform is built using the **MERN stack**, which includes ReactJS, NodeJS, 
 
 <hr/>
 
-<h2>Live link 🌍📡 - [https://learnhub-by-harsh.vercel.app/]</h2>
-<hr/>
+<!-- <h2>Live link 🌍📡 - [https://learnhub-by-harsh.vercel.app/]</h2>
+<hr/> -->
 
 
 <img width='100%' src='https://github.com/Aniruddha-Gade/Study-Notion-EdTech__MERN-Stack/blob/main/screenshots/home1.png' />
