@@ -69,7 +69,7 @@ portfinder.getPort({ port: BASE_PORT }, (err, availablePort) => {
         console.error('Error finding available port:', err);
         process.exit(1);
     }
-    
+
     app.listen(availablePort, () => {
         console.log(`Server Started on PORT ${availablePort}`);
         if (availablePort !== BASE_PORT) {
@@ -77,3 +77,6 @@ portfinder.getPort({ port: BASE_PORT }, (err, availablePort) => {
         }
     });
 });
+
+// Export the app for Vercel serverless functions
+module.exports = app;
